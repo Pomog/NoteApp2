@@ -13,7 +13,14 @@
 - Added GitHub remote (initially HTTPS): `https://github.com/Pomog/NoteApp2.git`
 - HTTPS push failed because GitHub requires token/SSH (password auth not supported)
 
-## 3) Switched to SSH authentication (recommended)
+## 3) Switched to SSH authentication
+- Generate keypair:
+```bash
+ssh-keygen -t ed25519 -C "your_email@example.com"
+
+cat ~/.ssh/id_ed25519.pub
+```
+
 - Generated SSH keypair (Ed25519):
     - Private key: `~/.ssh/id_ed25519`
     - Public key: `~/.ssh/id_ed25519.pub`
@@ -35,3 +42,25 @@
 ## Notes
 - GUI prompt “Enter password to unlock the private key” = SSH key passphrase unlock (normal).
 - Optional convenience: allow auto-unlock via keyring (“Automatically unlock this key whenever I’m logged in”).
+
+## Emulator fix (Linux)
+
+### Symptoms
+- Emulator was visible in `adb devices` but showed as `offline` (e.g. `emulator-5554 offline`).
+- Running/deploying the app to the emulator failed or hung (Gradle/DDMLib timeouts like `ShellCommandUnresponsiveException` / `TimeoutException`).
+- Android Studio could show “Waiting for all target devices to come online”.
+
+### What fixed it
+1) **Killed the stuck/offline emulator**
+```bash
+adb devices
+adb -s emulator-5554 emu kill
+adb devices
+```
+Result: only the healthy emulator remained (e.g. emulator-5556 device).
+
+2) **Adjusted AVD settings (more stable on Linux + NVIDIA)**
+In Android Studio → Device Manager → Edit (pencil) AVD:
+* Graphics acceleration: Software (SwiftShader)
+* Default boot: Cold (avoid corrupted Quick Boot snapshots)
+* RAM: 4 GB (optional)
