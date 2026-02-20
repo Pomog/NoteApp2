@@ -4,11 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.noteapp2.screen.NoteScreen
 import com.example.noteapp2.ui.theme.NoteApp2Theme
@@ -19,8 +17,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NoteApp2Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    NoteScreen(modifier = Modifier.padding(innerPadding))
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    NoteScreen(
+                        notes = emptyList(),
+                        onAddNote = {},
+                        onRemoveNote = {},
+                    )
                 }
             }
         }
@@ -32,6 +34,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     NoteApp2Theme {
-        NoteScreen()
+        NoteScreen(
+            notes = emptyList(),
+            onAddNote = {},
+            onRemoveNote = {},
+        )
     }
 }
