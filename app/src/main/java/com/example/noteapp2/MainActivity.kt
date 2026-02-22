@@ -9,8 +9,10 @@ import androidx.annotation.RequiresApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.noteapp2.data.NoteDataSource
+import com.example.noteapp2.model.Note
 import com.example.noteapp2.screen.NoteScreen
 import com.example.noteapp2.ui.theme.NoteApp2Theme
 
@@ -22,10 +24,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             NoteApp2Theme {
                 Surface(color = MaterialTheme.colorScheme.background) {
+                    val notes = remember {
+                        mutableListOf<Note>()
+                    }
                     NoteScreen(
-                        notes = NoteDataSource().loadNotes(),
-                        onAddNote = {},
-                        onRemoveNote = {},
+                        notes = notes,
+                        onAddNote = {
+                            notes.add(it)
+                        },
+                        onRemoveNote = {
+                            notes.remove(it)
+                        },
                     )
                 }
             }
@@ -34,12 +43,13 @@ class MainActivity : ComponentActivity() {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     NoteApp2Theme {
         NoteScreen(
-            notes = emptyList(),
+            notes = NoteDataSource().loadNotes(),
             onAddNote = {},
             onRemoveNote = {},
         )

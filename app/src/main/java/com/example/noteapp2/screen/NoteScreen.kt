@@ -1,6 +1,7 @@
 package com.example.noteapp2.screen
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,6 +52,7 @@ fun NoteScreen(modifier: Modifier = Modifier,
                ){
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     Column(modifier = modifier
         .fillMaxSize()
@@ -97,8 +100,14 @@ fun NoteScreen(modifier: Modifier = Modifier,
                 onClick = {
                     if (title.isNotEmpty() && description.isNotEmpty()) {
                         //  TODO: save/add to the list
+                        onAddNote(Note(
+                            title = title,
+                            description = description,
+                        ))
                         title = ""
                         description = ""
+                        Toast.makeText(context, "Note Added",
+                            Toast.LENGTH_SHORT).show()
                     }
                 }
             )
@@ -117,7 +126,9 @@ fun NoteScreen(modifier: Modifier = Modifier,
             items(notes) { note ->
                 NoteRow(
                     note = note,
-                    onNoteClicked = { TODO() }
+                    onNoteClicked = {
+                        onRemoveNote(note)
+                    }
                 )
             }
 
@@ -145,7 +156,7 @@ fun NoteRow(modifier: Modifier = Modifier,
     ) {
         Column(modifier
             .clickable {
-
+                onNoteClicked(note)
             }
             .padding(horizontal = 14.dp, vertical = 6.dp),
             horizontalAlignment = Alignment.Start
