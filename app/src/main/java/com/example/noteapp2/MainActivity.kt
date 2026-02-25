@@ -5,15 +5,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.noteapp2.data.NoteDataSource
-import com.example.noteapp2.model.Note
 import com.example.noteapp2.screen.NoteScreen
+import com.example.noteapp2.screen.NoteViewModel
 import com.example.noteapp2.ui.theme.NoteApp2Theme
 
 class MainActivity : ComponentActivity() {
@@ -24,22 +25,28 @@ class MainActivity : ComponentActivity() {
         setContent {
             NoteApp2Theme {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    val notes = remember {
-                        mutableListOf<Note>()
-                    }
-                    NoteScreen(
-                        notes = notes,
-                        onAddNote = {
-                            notes.add(it)
-                        },
-                        onRemoveNote = {
-                            notes.remove(it)
-                        },
-                    )
+                    val noteViewModel: NoteViewModel by viewModels()
+                    NotesApp(noteViewModel)
                 }
             }
         }
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun NotesApp(noteViewModel: NoteViewModel = viewModel()) {
+    val notesList = noteViewModel.getAllNotes()
+    NoteScreen(
+        notes = notesList,
+        onAddNote = {
+            noteViewModel.addNote(it)
+        },
+        onRemoveNote = {
+            noteViewModel.removeNote(it)
+        },
+    )
+
 }
 
 
