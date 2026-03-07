@@ -20,5 +20,5 @@ data class Note(
     @ColumnInfo(name = "note_description")
     val description: String,
     @ColumnInfo(name = "note_date")
-    val entryDate: Date = Date.from(Instant.now())
+    val entryDate: LocalDateTime? = Date.from(Instant.now())
 )
