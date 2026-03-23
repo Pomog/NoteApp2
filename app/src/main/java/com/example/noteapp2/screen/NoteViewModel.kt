@@ -49,7 +49,4 @@ class NoteViewModel @Inject constructor(private val repo: NoteRepository) : View
         repo.deleteNote(note)
     }
 
-    fun getAllNotes(): List<Note> {
-        return  noteList
-    }
 }
