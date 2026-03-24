@@ -10,9 +10,11 @@ import androidx.annotation.RequiresApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.noteapp2.data.NoteDataSource
+import com.example.noteapp2.model.Note
 import com.example.noteapp2.screen.NoteScreen
 import com.example.noteapp2.screen.NoteViewModel
 import com.example.noteapp2.ui.theme.NoteApp2Theme
@@ -27,6 +29,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             NoteApp2Theme {
                 Surface(color = MaterialTheme.colorScheme.background) {
+                    //val noteViewModel = viewModel<Note>()
                     val noteViewModel: NoteViewModel by viewModels()
                     NotesApp(noteViewModel)
                 }
@@ -37,8 +40,8 @@ class MainActivity : ComponentActivity() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun NotesApp(noteViewModel: NoteViewModel = viewModel()) {
-    val notesList = noteViewModel.getAllNotes()
+fun NotesApp(noteViewModel: NoteViewModel) {
+    val notesList = noteViewModel.noteList.collectAsState().value
     NoteScreen(
         notes = notesList,
         onAddNote = {
